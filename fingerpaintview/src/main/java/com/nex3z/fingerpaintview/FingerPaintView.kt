@@ -5,6 +5,7 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import kotlin.math.abs
 
 class FingerPaintView(
         context: Context,
@@ -15,8 +16,8 @@ class FingerPaintView(
     private lateinit var drawingBitmap: Bitmap
     private lateinit var drawingCanvas: Canvas
     private val drawingPaint = Paint(Paint.DITHER_FLAG)
-    private var penX: Float = 0.toFloat()
-    private var penY:Float = 0.toFloat()
+    private var penX: Float = 0f
+    private var penY:Float = 0f
 
     var pen = buildDefaultPen()
     var empty = true
@@ -37,15 +38,13 @@ class FingerPaintView(
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (event == null) return false
         empty = false
-        val x = event.x
-        val y = event.y
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                onTouchStart(x, y)
+                onTouchStart(event.x, event.y)
                 invalidate()
             }
             MotionEvent.ACTION_MOVE -> {
-                onTouchMove(x, y)
+                onTouchMove(event.x, event.y)
                 invalidate()
             }
             MotionEvent.ACTION_UP -> {
@@ -56,7 +55,6 @@ class FingerPaintView(
         }
         super.onTouchEvent(event)
         return true
-
     }
 
     override fun performClick(): Boolean {
@@ -100,8 +98,8 @@ class FingerPaintView(
     }
 
     private fun onTouchMove(x: Float, y: Float) {
-        val dx = Math.abs(x - penX)
-        val dy = Math.abs(y - penY)
+        val dx = abs(x - penX)
+        val dy = abs(y - penY)
         if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
             path.quadTo(penX, penY, (x + penX) / 2, (y + penY) / 2)
             penX = x
@@ -121,14 +119,13 @@ class FingerPaintView(
 
         @JvmStatic
         private fun buildDefaultPen(): Paint = Paint().apply {
-            this.isAntiAlias = true
-            this.isDither = true
-            this.color = Color.BLACK
-            this.style = Paint.Style.STROKE
-            this.strokeJoin = Paint.Join.ROUND
-            this.strokeCap = Paint.Cap.ROUND
-            this.strokeWidth = PEN_SIZE
+            isAntiAlias = true
+            isDither = true
+            color = Color.BLACK
+            style = Paint.Style.STROKE
+            strokeJoin = Paint.Join.ROUND
+            strokeCap = Paint.Cap.ROUND
+            strokeWidth = PEN_SIZE
         }
     }
-
 }
