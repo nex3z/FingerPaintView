@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'com.github.panpf.bintray-publish'
+apply plugin: 'com.vanniktech.maven.publish'
 
 android {
     compileSdkVersion 30
@@ -23,19 +23,6 @@ android {
 
 }
 
-tasks.withType(Javadoc).all {
-    enabled = false
-}
-
-publish {
-    userOrg = USER_ORG
-    groupId = GROUP_ID
-    artifactId = ARTIFACT_ID
-    publishVersion = PUBLISH_VERSION
-    desc = 'FingerPaintView'
-    website = 'https://github.com/nex3z/FingerPaintView'
-}
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -43,7 +30,4 @@ dependencies {
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test:runner:1.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-}
-repositories {
-    mavenCentral()
 }
